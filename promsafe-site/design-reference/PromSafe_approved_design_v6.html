@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PromSafe 2.0 – Visual Prototype V2</title><style>
+:root{
+  --navy:#0f2745; --navy2:#163a68; --blue:#1f4f8f; --blue2:#2e6bb2; --blue3:#4d86c7;
+  --blueSoft:#e9f1fa; --blueSoft2:#f4f8fc; --ink:#111827; --ink2:#344054; --muted:#475467;
+  --line:#c5d1df; --paper:#ffffff; --canvas:#eef3f8; --success:#2f6b5c; --warn:#9a6d2f;
+  --shadow:0 16px 46px rgba(15,39,69,.08); --shadow2:0 8px 28px rgba(15,39,69,.06);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:"Segoe UI Variable","Segoe UI",Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{text-decoration:none;color:inherit}
+button,input{font:inherit}
+.wrap{max-width:1180px;margin:auto;padding:0 28px}
+.emergency{background:var(--navy);color:#fff;padding:9px 0;font-size:12px}
+.emergency .wrap{display:flex;justify-content:space-between;gap:20px}
+nav{height:78px;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.navin{height:100%;display:flex;align-items:center;gap:28px}
+.brand{font-weight:820;font-size:23px;color:var(--navy2);letter-spacing:-.03em}
+.brand small{display:block;font-size:11px;color:#6a7686;letter-spacing:.08em;text-transform:uppercase;font-weight:760;margin-top:2px}
+.links{display:flex;gap:25px;margin-left:auto}
+.links a{font-size:14px;font-weight:620;color:#344054;padding:29px 0 25px;border-bottom:2px solid transparent;transition:.18s}
+.links a:hover,.links a.active{color:var(--blue);border-bottom-color:var(--blue)}
+.contact{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;padding:11px 17px;border-radius:10px;font-weight:720;font-size:13px;box-shadow:0 8px 20px rgba(31,79,143,.18);border:1px solid transparent;transition:.18s}.contact:hover{transform:translateY(-1px);box-shadow:0 11px 24px rgba(31,79,143,.24)}
+.page{display:none;min-height:65vh}.page.active{display:block}
+.hero{padding:76px 0 62px;background:linear-gradient(180deg,#fff 0%,#f7faff 100%)}
+.hero.compact{padding:58px 0 48px}
+.heroGrid{display:grid;grid-template-columns:1.08fr .72fr;gap:58px;align-items:center}
+.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.11em;color:var(--blue);font-weight:760}
+.crumbs{font-size:12px;color:#526173;margin-bottom:20px}
+.crumbs a{color:var(--blue);font-weight:650}
+h1{font-size:61px;line-height:.96;letter-spacing:-.055em;margin:16px 0 24px;max-width:860px}
+h2{font-size:42px;line-height:1;letter-spacing:-.04em;margin:10px 0 20px}
+h3{font-size:23px;line-height:1.08;letter-spacing:-.02em}
+.lead{font-size:18px;line-height:1.58;color:#3f4b5c;max-width:720px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.primary,.secondary,.textLink{display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;cursor:pointer}
+.primary{padding:14px 18px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 10px 24px rgba(31,79,143,.18)}
+.secondary{padding:14px 18px;border-radius:10px;background:#fff;color:var(--blue);border:1px solid #8eacd0}
+.textLink{color:var(--blue);padding:4px 0;border-bottom:1px solid #b7c8dc}
+.visual{min-height:390px;border:1px solid #b8c7d8;background:linear-gradient(145deg,#edf3fb,#dde8f4);border-radius:26px;display:flex;align-items:center;justify-content:center;text-align:center;color:#516b86;padding:28px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.visual:before{content:"";position:absolute;width:280px;height:280px;border-radius:50%;right:-70px;top:-70px;background:rgba(31,79,143,.08)}
+.visual strong{position:relative;z-index:1;font-size:18px}
+.proof{display:grid;grid-template-columns:repeat(4,1fr);margin-top:48px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.proof div{padding:18px 12px 18px 0}.proof b{display:block;font-size:19px}.proof span{font-size:11px;color:#475467}
+.section{padding:76px 0}.section.white{background:#fff}.section.soft{background:#edf3f9}.section.navy{background:var(--navy);color:#fff}
+.head{display:grid;grid-template-columns:1fr .75fr;gap:44px;align-items:end;margin-bottom:30px}.head p{color:var(--muted);line-height:1.55}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow2);transition:.18s}
+.card:hover{transform:translateY(-2px);border-color:#a9bfd8;box-shadow:0 14px 34px rgba(20,46,76,.09)}
+.card.feature{min-height:205px;display:flex;flex-direction:column}.card.feature h3{margin-top:auto}
+.card small{color:#526173}.card p{font-size:13px;line-height:1.5;color:#4b596b}.card a{font-size:13px;font-weight:700;color:var(--blue)}
+.asideLayout{display:grid;grid-template-columns:260px 1fr;gap:34px}
+.side{position:sticky;top:100px;align-self:start;background:#fff;border:1px solid #bfd0e1;border-radius:18px;padding:20px;box-shadow:0 12px 28px rgba(15,39,69,.07)}
+.side b{display:block;margin-bottom:12px;font-size:18px;font-weight:780;color:#1b2b40}.side a{display:block;padding:11px 10px;border-radius:10px;font-size:16px;font-weight:560;color:#445468;transition:.18s}
+.side a:hover{background:var(--blueSoft);color:var(--blue);transform:translateX(2px)}
+.list{border-top:1px solid var(--line)}
+.listItem{padding:21px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:42px 1fr;gap:14px}
+.listItem>b{color:var(--blue);font-size:12px}.listItem h3{margin:0 0 6px}.listItem p{margin:0;font-size:13px;line-height:1.52;color:var(--muted)}
+.priceBox{background:linear-gradient(145deg,#173e6a,#0f2745);color:#fff;border-radius:20px;padding:28px;box-shadow:var(--shadow)}
+.priceBox p{color:#dbe7f5;font-size:17px;line-height:1.65}.priceBox h2,.priceBox h3{color:#fff}.priceBox .kicker{color:#c6daf1}
+.tag{display:inline-block;background:var(--blueSoft);color:var(--blue);font-size:11px;padding:7px 10px;border-radius:999px;font-weight:700;margin:0 6px 6px 0}
+.articleWrap{max-width:820px}
+.articleWrap .meta{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#526173;margin:14px 0 24px}
+.articleWrap h2{font-size:34px;margin-top:48px}.articleWrap p,.articleWrap li{font-size:17px;line-height:1.72;color:#3f4b59}
+.articleWrap ul{padding-left:22px}.note{background:var(--blueSoft);border-left:4px solid var(--blue);padding:18px 20px;border-radius:0 12px 12px 0;color:#31445d;line-height:1.55}
+.materialGrid{display:grid;grid-template-columns:1.15fr .85fr .85fr;gap:13px}
+.material{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;min-height:230px;display:flex;flex-direction:column;box-shadow:var(--shadow2)}
+.material.featured{background:linear-gradient(145deg,#173e6a,#0f2745);color:#fff}.material small{color:#526173}.material.featured small{color:#a9c7e7}
+.material h3{font-size:23px;line-height:1.08;margin-top:auto}.material p{font-size:12px;line-height:1.5;color:#4b596b}.material.featured p{color:#c4d1de}.material a{font-size:13px;font-weight:700;color:var(--blue)}.material.featured a{color:#fff}
+.people{display:grid;grid-template-columns:1.15fr .925fr .925fr;gap:13px}.person{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow2)}
+.personPhoto{height:210px;background:linear-gradient(145deg,#eef3f9,#dce7f2);display:flex;align-items:center;justify-content:center;color:#516b86}.person:first-child .personPhoto{height:270px}
+.personBody{padding:20px}.personBody small{color:var(--blue);text-transform:uppercase;letter-spacing:.07em}.personBody b{display:block;font-size:21px;margin-top:8px}.personBody p{font-size:12px;line-height:1.5;color:#4b596b}
+.calcShell{max-width:900px;margin:auto}.quiz{background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
+.progress{height:5px;background:#dbe5f0;border-radius:99px;overflow:hidden;margin-bottom:26px}.progress div{height:100%;width:20%;background:linear-gradient(90deg,var(--blue),#5b8fc9);transition:.25s}
+.qtitle{font-size:31px;line-height:1.08;margin:12px 0 22px}.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.opt{border:1px solid #b7c6d8;border-radius:11px;padding:15px;background:#fff;color:#344054;font-weight:560;text-align:left;cursor:pointer;transition:.18s}
+.opt:hover,.opt.active{border-color:var(--blue);background:var(--blueSoft);color:#163a68}.calcFoot{display:flex;justify-content:space-between;align-items:center;margin-top:25px}.back{border:0;background:none;color:var(--blue);font-weight:650;cursor:pointer}.result{display:none}
+.docpreview{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--shadow);min-height:330px}.paper{background:#fbfcfe;border:1px solid #e2e7ee;min-height:270px;padding:24px;border-radius:8px}.paper h4{margin-top:0}.line{height:7px;background:#d9e0e8;border-radius:99px;margin:12px 0}.line.w90{width:90%}.line.w72{width:72%}.line.w84{width:84%}
+.download{background:linear-gradient(145deg,#173e6a,#0f2745);color:#fff;border-radius:20px;padding:30px}.download p{color:#c6d1de}.download .primary{background:#fff;color:var(--blue)}
+.footer{background:var(--navy);color:#eff4fa;padding:48px 0}.foot{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px}.footer small{color:#c2d0df}
+.previewBadge{position:fixed;right:18px;bottom:18px;z-index:80;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:11px;color:#475467;box-shadow:var(--shadow2)}
+
+.homeCalculatorSection{position:relative;overflow:hidden}.homeCalculatorSection:before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:rgba(31,79,143,.045);right:-210px;top:-220px;pointer-events:none}.homeCalcHead{position:relative;z-index:1}.homeCalcLayout{display:grid;grid-template-columns:.42fr 1fr;gap:18px;align-items:stretch;position:relative;z-index:1}.homeCalcAside{background:linear-gradient(155deg,#173e6a,#0f2745);border-radius:20px;padding:26px;color:#fff;display:flex;flex-direction:column;min-height:100%}.homeCalcStep{display:flex;align-items:center;gap:14px;padding-bottom:23px;border-bottom:1px solid rgba(255,255,255,.14)}.homeCalcStep>span{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:750;color:#c5dbf2}.homeCalcStep b{display:block;font-size:17px}.homeCalcStep small{display:block;color:#aabed4;margin-top:4px;line-height:1.4}.homeCalcBenefits{display:grid;gap:17px;margin-top:27px}.homeCalcBenefits div{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:13px;line-height:1.45;color:#d3deea}.homeCalcBenefits i{font-style:normal;color:#9dc2e8;font-weight:800}.homeCalcFullLink{margin-top:auto;padding-top:30px;color:#b9d4ef;font-size:13px;font-weight:700}.homeQuiz{min-height:440px;display:flex;flex-direction:column;justify-content:center}.homeQuizMeta{display:flex;justify-content:space-between;align-items:center}.homeQuizMeta>span{font-size:12px;font-weight:700;color:#526173}.homeResultGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}.homeResultGrid>div{background:#f7f9fc;border:1px solid var(--line);border-radius:12px;padding:15px}.homeResultGrid small{display:block;color:#526173;font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}.homeResultGrid b{font-size:13px;line-height:1.4;display:block}.homeResultActions{display:flex;gap:10px;flex-wrap:wrap}.homeResultActions .secondary{border:1px solid #8eacd0;cursor:pointer}.homeCalculatorSection .qtitle{max-width:700px}
+
+@media(max-width:900px){
+  .links{display:none}.heroGrid,.head,.asideLayout{grid-template-columns:1fr}.side{position:static}.grid3,.people,.materialGrid{grid-template-columns:1fr 1fr}.proof{grid-template-columns:1fr 1fr}h1{font-size:48px}
+}
+
+@media(max-width:900px){.homeCalcLayout{grid-template-columns:1fr}.homeCalcAside{min-height:auto}.homeCalcFullLink{margin-top:24px}.homeResultGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){
+  .wrap{padding:0 18px}.emergency .wrap{flex-direction:column;gap:3px}.hero{padding:52px 0}.grid3,.grid2,.people,.materialGrid,.options,.proof,.foot{grid-template-columns:1fr}h1{font-size:40px}h2{font-size:34px}.contact{display:none}.qtitle{font-size:26px}.homeResultGrid{grid-template-columns:1fr}.homeCalcAside{padding:22px}.homeQuiz{min-height:0}.previewBadge{display:none}
+}
+</style>
+<style>
+.material a,.card a,.textLink{font-weight:720}
+.material a:hover,.card a:hover,.textLink:hover{color:#163a68}
+.links a{color:#263445}
+.side a{color:#3d4a5a}
+.articleWrap p,.articleWrap li{color:#364152}
+.crumbs{color:#526173}
+</style>
+
+<style>
+.phrase-bright{color:#eef6ff;font-weight:560}
+</style>
+
+
+<style>
+.footerLink{color:#f3f8fd;text-decoration:none;font-weight:560}
+.footerLink:hover{text-decoration:underline}
+.contact-direct{color:#fff;font-size:22px;font-weight:720}
+.contact-direct:hover{text-decoration:underline}
+.formLabel{display:block;font-size:12px;font-weight:700;color:#344054;margin:14px 0 6px}
+.formField{width:100%;border:1px solid #b7c6d8;border-radius:10px;padding:13px 14px;background:#fff;color:#1f2937;outline:none}
+.formField:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,79,143,.12)}
+.formSubmit{border:0;margin-top:18px}
+.formSuccess{margin-top:16px;padding:13px 15px;border-radius:10px;background:#e9f1fa;color:#173e6a;font-weight:650;font-size:13px}
+</style>
+
+</head>
+<body>
+<div class="emergency"><div class="wrap"><span>Экстренная помощь при несчастном случае</span><span>+7 (916) 346–64–69</span></div></div>
+<nav><div class="wrap navin">
+<a href="#home" data-page="home" class="brand">PromSafe<small>Промбезопасность Консалт</small></a>
+<div class="links">
+<a href="#home" data-page="home">Главная</a>
+<a href="#service" data-page="service">Услуги</a>
+<a href="#industry" data-page="industry">Решения</a>
+<a href="#calculator" data-page="calculator">Калькулятор</a>
+<a href="#article" data-page="article">База знаний</a>
+<a href="#resource" data-page="resource">Документы</a>
+</div>
+<a href="#contact" data-page="contact" class="contact">Контакты</a>
+</div></nav>
+<main class="page" data-page-id="home">
+<section class="hero"><div class="wrap">
+<div class="heroGrid">
+<div>
+<div class="kicker">Охрана труда для бизнеса</div>
+<h1>Система охраны труда, которая работает не только на бумаге.</h1>
+<p class="lead">Помогаем компаниям выстроить процессы, привести в порядок документы, подготовиться к проверкам и действовать правильно в сложных ситуациях.</p>
+<div class="actions"><a class="primary" href="#service" data-page="service">Посмотреть услуги</a><a class="secondary" href="#calculator" data-page="calculator">Рассчитать объём работ</a></div>
+</div>
+<div class="visual"><strong>СЛОТ ПОД ОРИГИНАЛЬНОЕ ФОТО<br>ШАМИЛЯ МАНСУРОВА</strong></div>
+</div>
+<div class="proof"><div><b>С 2011 года</b><span>работает компания</span></div><div><b>24/7</b><span>помощь при ЧП</span></div><div><b>По договору</b><span>ответственность за работу</span></div><div><b>Команда экспертов</b><span>реальные специалисты PromSafe</span></div></div>
+</div></section>
+
+<section class="section white"><div class="wrap">
+<div class="head"><div><div class="kicker">С какой задачей вы пришли?</div><h2>Не нужно разбираться в названиях услуг.</h2></div><p>Выберите ситуацию – дальше сайт покажет подходящее решение, полезные материалы и только потом предложит связаться со специалистом.</p></div>
+<div class="grid3">
+<div class="card feature"><small>01</small><h3>Нужна охрана труда под ключ</h3><p>Нет отдельного специалиста или функцию нужно передать на сопровождение.</p><a href="#service" data-page="service">Перейти к решению →</a></div>
+<div class="card feature"><small>02</small><h3>Предстоит проверка ГИТ</h3><p>Нужно проверить готовность и понять, что исправить заранее.</p><a href="#resource" data-page="resource">Начать с чек-листа →</a></div>
+<div class="card feature"><small>03</small><h3>Произошёл несчастный случай</h3><p>Нужен понятный алгоритм первых действий и сопровождение.</p><a href="#article" data-page="article">Что делать сейчас →</a></div>
+<div class="card feature"><small>04</small><h3>Нужно оценить объём работ</h3><p>Пять вопросов о компании и текущей ситуации.</p><a href="#calculator" data-page="calculator">Открыть калькулятор →</a></div>
+<div class="card feature"><small>05</small><h3>Производство</h3><p>Отдельный сценарий для предприятий с производственными рисками.</p><a href="#industry" data-page="industry">Решение для производства →</a></div>
+<div class="card feature"><small>06</small><h3>Хочу сначала разобраться сам</h3><p>Статьи, чек-листы и бесплатные документы.</p><a href="#article" data-page="article">Перейти в базу знаний →</a></div>
+</div>
+</div></section>
+
+<section class="section soft homeCalculatorSection" id="home-calculator"><div class="wrap">
+<div class="head homeCalcHead"><div><div class="kicker">Калькулятор</div><h2>Узнайте предварительный объём работ для вашей компании.</h2></div><p>Ответьте на пять коротких вопросов. Результат покажем сразу – телефон или email для этого не нужны.</p></div>
+<div class="homeCalcLayout">
+<div class="homeCalcAside">
+<div class="homeCalcStep"><span id="homeStepNumber">01</span><div><b>5 вопросов</b><small>Обычно занимает меньше двух минут</small></div></div>
+<div class="homeCalcBenefits">
+<div><i>✓</i><span>Покажем, какие блоки работ могут понадобиться</span></div>
+<div><i>✓</i><span>Определим предварительный формат сопровождения</span></div>
+<div><i>✓</i><span>Без обязательной заявки после расчёта</span></div>
+</div>
+<a href="#calculator" data-page="calculator" class="homeCalcFullLink">Открыть отдельной страницей →</a>
+</div>
+<div class="quiz homeQuiz">
+<div id="homeQuizbox">
+<div class="progress"><div id="homeProg"></div></div>
+<div class="homeQuizMeta"><div class="kicker" id="homeQnum">Вопрос 1 из 5</div><span id="homeProgressText">20%</span></div>
+<div class="qtitle" id="homeQtitle"></div>
+<div class="options" id="homeOptions"></div>
+<div class="calcFoot"><button class="back" id="homeBack">Назад</button><span style="font-size:12px;color:#526173">Ответы не отправляются на сервер</span></div>
+</div>
+<div class="result" id="homeResult">
+<div class="kicker">Предварительный результат</div>
+<h2>Мы сформировали базовый профиль вашей задачи.</h2>
+<p id="homeSummary" class="lead" style="font-size:15px"></p>
+<div class="homeResultGrid">
+<div><small>Рекомендуемый первый шаг</small><b>Проверить текущую систему и документы</b></div>
+<div><small>Формат</small><b id="homeFormat">Определим по вашим ответам</b></div>
+<div><small>Стоимость</small><b>После утверждения ценовой модели PromSafe</b></div>
+</div>
+<div class="homeResultActions"><a class="primary" href="#calculator" data-page="calculator">Посмотреть подробный расчёт</a><button class="secondary" type="button" id="homeRestart">Пройти заново</button></div>
+</div>
+</div>
+</div>
+</div></section>
+
+<section class="section white"><div class="wrap">
+<div class="head"><div><div class="kicker">Команда</div><h2>За проектами стоят конкретные люди.</h2></div><p>На финальном сайте используем только настоящие фотографии, должности и подтверждённые сведения о специалистах.</p></div>
+<div class="people">
+<div class="person"><div class="personPhoto">Фото Шамиля Мансурова</div><div class="personBody"><small>Генеральный директор</small><b>Шамиль Хамзаевич Мансуров</b><p>Короткое описание роли и специализации.</p></div></div>
+<div class="person"><div class="personPhoto">Фото Натальи Мансуровой</div><div class="personBody"><small>Эксперт</small><b>Наталья Владимировна Мансурова</b><p>Короткое описание роли и специализации.</p></div></div>
+<div class="person"><div class="personPhoto">Фото Константина Шепелева</div><div class="personBody"><small>Эксперт</small><b>Константин Николаевич Шепелев</b><p>Короткое описание роли и специализации.</p></div></div>
+</div>
+</div></section>
+
+<section class="section"><div class="wrap">
+<div class="head"><div><div class="kicker">База знаний</div><h2>Полезные материалы без обязательной заявки.</h2></div><p>Это одновременно сервис для клиента и основа бесплатного SEO-трафика.</p></div>
+<div class="materialGrid">
+<div class="material featured"><small>Бесплатный документ</small><h3>Чек-лист подготовки к проверке ГИТ</h3><p>Скачать PDF без обязательного телефона.</p><a href="#resource" data-page="resource">Скачать →</a></div>
+<div class="material"><small>Статья</small><h3>Что делать при несчастном случае</h3><p>Практический материал с актуальными источниками.</p><a href="#article" data-page="article">Читать →</a></div>
+<div class="material"><small>Статья</small><h3>Какие документы нужны компании</h3><p>Структурированный материал по типу организации.</p><a href="#documents-article" data-page="documents-article">Читать →</a></div>
+</div>
+</div></section>
+</main>
+<main class="page" data-page-id="service">
+<section class="hero"><div class="wrap">
+<div class="crumbs"><a href="#home" data-page="home">Главная</a> / Услуги / Аутсорсинг охраны труда</div>
+<div class="heroGrid">
+<div><div class="kicker">Услуга</div><h1>Аутсорсинг охраны труда для компаний, которым нужна системная работа.</h1><p class="lead">Берём на сопровождение согласованный объём задач – от документов и сроков до подготовки к проверкам и консультаций руководителей.</p>
+<div class="actions"><a class="primary" href="#calculator" data-page="calculator">Оценить объём работ</a><a class="secondary" href="#service-scope">Что входит</a></div></div>
+<div class="visual"><strong>РЕАЛЬНОЕ ФОТО ПРОЕКТА<br>или специалиста PromSafe</strong></div>
+</div></div></section>
+
+<section class="section white" id="service-scope"><div class="wrap asideLayout">
+<aside class="side"><b>На странице</b><a href="#who">Кому подходит</a><a href="#scope">Что входит</a><a href="#process">Как работаем</a><a href="#price">От чего зависит цена</a><a href="#materials">Материалы</a></aside>
+<div>
+<div id="who"><div class="kicker">Кому подходит</div><h2>Когда аутсорсинг имеет смысл.</h2><div class="grid2">
+<div class="card"><h3>Нет штатного специалиста</h3><p>Функцию нужно закрыть без расширения внутренней команды.</p></div>
+<div class="card"><h3>Нужна внешняя экспертиза</h3><p>В компании есть ответственный, но сложные вопросы требуют практической поддержки.</p></div>
+</div></div>
+
+<div id="scope" style="margin-top:58px"><div class="kicker">Состав услуги</div><h2>Что можем взять на себя.</h2>
+<div class="list">
+<div class="listItem"><b>01</b><div><h3>Документация</h3><p>Актуализация и разработка необходимых документов по согласованному объёму.</p></div></div>
+<div class="listItem"><b>02</b><div><h3>Контроль обязательных мероприятий</h3><p>Сроки обучения, медосмотров и других обязательных процессов.</p></div></div>
+<div class="listItem"><b>03</b><div><h3>Профессиональные риски</h3><p>Проверка текущей системы и организация необходимых работ.</p></div></div>
+<div class="listItem"><b>04</b><div><h3>Проверки и сложные ситуации</h3><p>Подготовка документов и экспертное сопровождение.</p></div></div>
+</div></div>
+
+<div id="process" style="margin-top:58px"><div class="kicker">Процесс</div><h2>Как начинается работа.</h2><div class="grid3">
+<div class="card"><small>Шаг 1</small><h3>Аудит ситуации</h3><p>Разбираемся, что уже есть и чего не хватает.</p></div>
+<div class="card"><small>Шаг 2</small><h3>Фиксируем объём</h3><p>Определяем задачи и границы ответственности.</p></div>
+<div class="card"><small>Шаг 3</small><h3>Сопровождаем</h3><p>Ведём согласованные процессы и подключаемся к возникающим вопросам.</p></div>
+</div></div>
+
+<div id="price" style="margin-top:58px" class="priceBox"><div class="kicker">Стоимость</div><h2>Цена зависит от структуры компании.</h2><p>На неё влияют численность, отрасль, количество площадок, текущая готовность документов и объём задач. Финальную формулу добавим после получения реальной ценовой модели PromSafe.</p><a class="primary" href="#calculator" data-page="calculator">Пройти предварительный расчёт</a></div>
+
+<div id="materials" style="margin-top:58px"><div class="kicker">Материалы по теме</div><h2>Можно сначала разобраться самостоятельно.</h2><div class="grid2">
+<div class="card"><h3>Чек-лист подготовки к проверке ГИТ</h3><a href="#resource" data-page="resource">Скачать →</a></div>
+<div class="card"><h3>Что делать при несчастном случае</h3><a href="#article" data-page="article">Читать →</a></div>
+</div></div>
+</div></div></section>
+</main>
+<main class="page" data-page-id="industry">
+<section class="hero"><div class="wrap">
+<div class="crumbs"><a href="#home" data-page="home">Главная</a> / Решения / Производство</div>
+<div class="heroGrid">
+<div><div class="kicker">Решение для отрасли</div><h1>Охрана труда для производственных компаний.</h1><p class="lead">Страница строится не вокруг общего перечня услуг, а вокруг специфики предприятия – рабочих мест, опасностей, оборудования, обучения и контроля процессов.</p>
+<div class="actions"><a class="primary" href="#calculator" data-page="calculator">Оценить объём работ</a><a class="secondary" href="#industry-risks">Что учитывать</a></div></div>
+<div class="visual"><strong>РЕАЛЬНАЯ ФОТОГРАФИЯ<br>производственного объекта</strong></div>
+</div></div></section>
+
+<section class="section white" id="industry-risks"><div class="wrap">
+<div class="head"><div><div class="kicker">Специфика</div><h2>Что делает производство отдельным сценарием.</h2></div><p>Здесь будут только конкретные факторы после юридической и экспертной проверки – без универсальных страшилок.</p></div>
+<div class="grid3">
+<div class="card feature"><h3>Рабочие места и опасности</h3><p>Нужно учитывать реальный характер производственных операций.</p></div>
+<div class="card feature"><h3>Обучение и допуски</h3><p>Набор обязательных мероприятий зависит от выполняемых работ.</p></div>
+<div class="card feature"><h3>Документация и процессы</h3><p>Система должна отражать фактическую структуру предприятия.</p></div>
+</div></div></section>
+
+<section class="section soft"><div class="wrap">
+<div class="head"><div><div class="kicker">Какой путь клиента</div><h2>От отрасли – к конкретной задаче.</h2></div><p>SEO приводит посетителя на страницу «для производства», а дальше он выбирает свой реальный сценарий.</p></div>
+<div class="grid3">
+<div class="card"><h3>Нужно сопровождение целиком</h3><a href="#service" data-page="service">Аутсорсинг →</a></div>
+<div class="card"><h3>Нужна оценка рисков</h3><a href="#risk-service" data-page="risk-service">Страница услуги →</a></div>
+<div class="card"><h3>Предстоит проверка</h3><a href="#resource" data-page="resource">Начать с чек-листа →</a></div>
+</div>
+</div></section>
+
+<section class="section white"><div class="wrap"><div class="priceBox"><div class="kicker">Предварительная оценка</div><h2>Не знаете, какие работы нужны именно вашему производству?</h2><p>Калькулятор задаст пять вопросов и покажет предварительный состав проекта.</p><a class="primary" href="#calculator" data-page="calculator">Перейти к калькулятору</a></div></div></section>
+</main>
+<main class="page" data-page-id="calculator">
+<section class="hero compact"><div class="wrap">
+<div class="crumbs"><a href="#home" data-page="home">Главная</a> / Калькулятор</div>
+<div class="kicker">Интерактив</div><h1 style="max-width:900px">Предварительная оценка объёма работ по охране труда.</h1>
+<p class="lead">Пять вопросов. Сначала результат – контакт только после этого и только если нужен точный расчёт.</p>
+</div></section>
+<section class="section white"><div class="wrap calcShell">
+<div class="quiz">
+<div id="quizbox"><div class="progress"><div id="prog"></div></div><div class="kicker" id="qnum">Вопрос 1 из 5</div><div class="qtitle" id="qtitle"></div><div class="options" id="options"></div><div class="calcFoot"><button class="back" id="back">Назад</button><span style="font-size:12px;color:#526173">Ответы пока не отправляются на сервер</span></div></div>
+<div class="result" id="result"><div class="kicker">Предварительный результат</div><h2>Рекомендуем сначала оценить текущую систему и состав работ.</h2><p id="summary" class="lead" style="font-size:15px"></p>
+<div class="list">
+<div class="listItem"><b>01</b><div><h3>Проверить СУОТ и документы</h3><p>Определить, что уже есть и что необходимо актуализировать.</p></div></div>
+<div class="listItem"><b>02</b><div><h3>Определить объём профессиональных рисков</h3><p>Состав зависит от отрасли и рабочих процессов.</p></div></div>
+<div class="listItem"><b>03</b><div><h3>Выбрать формат сопровождения</h3><p>Разовая работа или постоянный аутсорсинг.</p></div></div>
+</div>
+<div class="priceBox" style="margin-top:24px"><h3>Стоимость пока не показываем</h3><p>Ценовой диапазон появится только после согласования реальной формулы PromSafe.</p><a class="primary" href="#contact" data-page="contact">Получить точный расчёт</a></div>
+</div>
+</div></div></section>
+</main>
+<main class="page" data-page-id="article">
+<section class="hero compact"><div class="wrap">
+<div class="crumbs"><a href="#home" data-page="home">Главная</a> / База знаний / Несчастные случаи</div>
+<div class="kicker">Практический материал</div>
+<h1 style="max-width:920px">Что делать работодателю при несчастном случае на производстве.</h1>
+<div class="articleWrap"><div class="meta"><span>Категория: несчастные случаи</span><span>Дата актуализации – при публикации</span><span>Автор/эксперт – после подтверждения</span></div>
+<p class="lead">Финальная статья будет подготовлена только по актуальным официальным источникам. Здесь показываем визуал и структуру будущей страницы.</p></div>
+</div></section>
+
+<section class="section white"><div class="wrap asideLayout">
+<aside class="side"><b>Содержание</b><a href="#a1">Первые действия</a><a href="#a2">Извещение</a><a href="#a3">Расследование</a><a href="#a4">Документы</a><a href="#a5">Когда нужен специалист</a></aside>
+<article class="articleWrap">
+<div class="note">В финальной версии каждое юридически значимое утверждение будет проверено по официальным источникам и снабжено ссылкой.</div>
+<h2 id="a1">1. Первые действия</h2><p>Здесь будет короткий, проверяемый алгоритм действий работодателя. Без длинного вступления и SEO-воды.</p>
+<h2 id="a2">2. Кого и когда необходимо уведомить</h2><p>Раздел будет заполнен после проверки действующих требований и сроков на дату публикации.</p>
+<h2 id="a3">3. Как проходит расследование</h2><p>Пошаговая схема с пояснениями простым языком, ссылками на нормы и примерами документов.</p>
+<h2 id="a4">4. Какие документы понадобятся</h2><ul><li>перечень будет проверен специалистом;</li><li>для каждого документа можно дать образец или памятку;</li><li>связанные материалы будут доступны прямо из статьи.</li></ul>
+<h2 id="a5">5. Когда лучше подключить специалиста</h2><p>Коммерческий блок появляется только после того, как человек получил полноценный ответ на свой вопрос.</p>
+<div class="priceBox"><h3>Нужна помощь в конкретной ситуации?</h3><p><span class="phrase-bright">Экстренную линию показываем здесь как естественное продолжение статьи, а не как всплывающую рекламу.</span></p><h2 style="margin-bottom:0"><a href="tel:+79163466469">+7 (916) 346–64–69</a></h2></div>
+</article></div></section>
+</main>
+<main class="page" data-page-id="resource">
+<section class="hero"><div class="wrap">
+<div class="crumbs"><a href="#home" data-page="home">Главная</a> / Бесплатные материалы / Проверка ГИТ</div>
+<div class="heroGrid">
+<div><div class="kicker">Бесплатный материал</div><h1>Чек-лист подготовки к проверке ГИТ.</h1><p class="lead">Материал можно скачать без обязательного телефона. Это инструмент доверия и органического привлечения, а не скрытая форма лидогенерации.</p>
+<div class="actions"><a class="primary" href="PromSafe_checklist_GIT_demo.pdf" download>Скачать PDF</a><a class="secondary" href="#article" data-page="article">Перейти в базу знаний</a></div></div>
+<div class="docpreview"><div class="paper"><h4>ЧЕК-ЛИСТ</h4><div class="line"></div><div class="line w90"></div><div class="line w72"></div><div class="line w84"></div><div class="line"></div><small>Превью реального документа</small></div></div>
+</div></div></section>
+
+<section class="section white"><div class="wrap">
+<div class="head"><div><div class="kicker">Что внутри</div><h2>Документ должен быть полезен сам по себе.</h2></div><p>Финальное содержание будет согласовано с экспертами и проверено по актуальным требованиям.</p></div>
+<div class="grid3">
+<div class="card"><h3>Документация</h3><p>Какие группы документов стоит проверить.</p></div>
+<div class="card"><h3>Обучение и обязательные процессы</h3><p>Напоминания по контрольным точкам.</p></div>
+<div class="card"><h3>Что делать при несоответствиях</h3><p>Как расставить приоритеты до проверки.</p></div>
+</div></div></section>
+
+<section class="section soft" id="resource-download"><div class="wrap"><div class="download"><div class="kicker" style="color:#a9c7e7">Скачать</div><h2>Чек-лист в PDF</h2><p>В финальном сайте файл загружается сразу. При желании рядом можно предложить подписку на обновления, но не делать её обязательной.</p><a class="primary" href="PromSafe_checklist_GIT_demo.pdf" download>Скачать файл</a></div></div></section>
+</main>
+
+<main class="page" data-page-id="documents-article">
+<section class="hero compact"><div class="wrap">
+<div class="crumbs"><a href="#home" data-page="home">Главная</a> / База знаний / Документация</div>
+<div class="kicker">Практический материал</div>
+<h1 style="max-width:920px">Какие документы по охране труда нужны компании.</h1>
+<div class="articleWrap">
+<div class="meta"><span>Категория: документация</span><span>Дата актуализации – при публикации</span><span>Эксперт – после подтверждения</span></div>
+<p class="lead">Структура документации зависит от вида деятельности, численности, рабочих процессов и других факторов. Финальная версия статьи будет подготовлена по актуальным требованиям и проверена специалистом PromSafe.</p>
+</div></div></section>
+
+<section class="section white"><div class="wrap asideLayout">
+<aside class="side"><b>Содержание</b><a href="#d1">Базовый комплект</a><a href="#d2">СУОТ</a><a href="#d3">Риски и обучение</a><a href="#d4">Что зависит от отрасли</a><a href="#d5">Как проверить комплект</a></aside>
+<article class="articleWrap">
+<div class="note">На финальном сайте здесь будут только проверенные требования со ссылками на официальные источники и датой последней актуализации.</div>
+<h2 id="d1">1. Базовый комплект документов</h2>
+<p>В этом разделе будет понятный список основных групп документов – без попытки выдать универсальный набор за подходящий каждой компании.</p>
+<h2 id="d2">2. Система управления охраной труда</h2>
+<p>Отдельно объясним, какие документы относятся к СУОТ и как они связаны с реальными процессами компании.</p>
+<h2 id="d3">3. Профессиональные риски, обучение и обязательные мероприятия</h2>
+<p>Покажем, какие блоки нужно проверить и какие данные влияют на состав документации.</p>
+<h2 id="d4">4. Что меняется в зависимости от отрасли</h2>
+<p>Для производства, строительства, офиса, торговли и склада набор требований может отличаться. Из статьи пользователь сможет перейти на соответствующее отраслевое решение.</p>
+<h2 id="d5">5. Как проверить, всё ли в порядке</h2>
+<p>Вместо рекламной формы предложим бесплатный чек-лист или предварительную оценку через калькулятор.</p>
+<div class="actions"><a class="secondary" href="#resource" data-page="resource">Скачать чек-лист</a><a class="primary" href="#calculator" data-page="calculator">Проверить объём работ</a></div>
+</article></div></section>
+</main>
+
+
+<main class="page" data-page-id="risk-service">
+<section class="hero"><div class="wrap">
+<div class="crumbs"><a href="#home" data-page="home">Главная</a> / Услуги / Оценка профессиональных рисков</div>
+<div class="heroGrid">
+<div><div class="kicker">Услуга</div><h1>Оценка профессиональных рисков.</h1>
+<p class="lead">Отдельная страница услуги для компаний, которым нужно системно определить опасности, оформить результаты и связать оценку с реальными рабочими процессами.</p>
+<div class="actions"><a class="primary" href="#calculator" data-page="calculator">Оценить объём работ</a><a class="secondary" href="#risk-scope">Что входит</a></div></div>
+<div class="visual"><strong>СЛОТ ПОД РЕАЛЬНУЮ ФОТОГРАФИЮ<br>рабочего процесса / объекта</strong></div>
+</div></div></section>
+<section class="section white" id="risk-scope"><div class="wrap">
+<div class="head"><div><div class="kicker">Состав работы</div><h2>От фактических процессов – к понятной системе управления рисками.</h2></div><p>Финальный состав работ и формулировки будут уточнены вместе со специалистами PromSafe.</p></div>
+<div class="grid3">
+<div class="card feature"><h3>Сбор исходных данных</h3><p>Определяем структуру, рабочие места и характер выполняемых операций.</p></div>
+<div class="card feature"><h3>Выявление опасностей</h3><p>Формируем рабочую основу оценки под реальные процессы компании.</p></div>
+<div class="card feature"><h3>Документы и мероприятия</h3><p>Результаты связываются с дальнейшими действиями и документацией.</p></div>
+</div>
+<div class="actions" style="margin-top:30px"><a class="primary" href="#calculator" data-page="calculator">Перейти к калькулятору</a><a class="secondary" href="#contact" data-page="contact">Задать вопрос</a></div>
+</div></section>
+</main>
+
+
+<main class="page" data-page-id="contact">
+<section class="hero compact"><div class="wrap">
+<div class="crumbs"><a href="#home" data-page="home">Главная</a> / Контакты</div>
+<div class="kicker">Связаться с PromSafe</div>
+<h1>Расскажите, какая задача стоит перед компанией.</h1>
+<p class="lead">Можно позвонить напрямую или оставить контакты. В прототипе форма работает локально и не отправляет персональные данные наружу.</p>
+</div></section>
+<section class="section white"><div class="wrap grid2">
+<div class="priceBox">
+<div class="kicker">Контакты</div>
+<h2>Связаться напрямую</h2>
+<p><a class="contact-direct" href="tel:+79163466469">+7 (916) 346-64-69</a></p>
+<p><a class="contact-direct" href="tel:+79100001485">+7 (910) 000-14-85</a></p>
+<p><a class="contact-direct" href="mailto:info@promsafe.ru">info@promsafe.ru</a></p>
+</div>
+<div class="card" style="padding:28px">
+<div class="kicker">Запрос</div>
+<h2 style="font-size:32px">Оставить контакты</h2>
+<label class="formLabel">Имя</label>
+<input class="formField" id="contact-name" placeholder="Как к вам обращаться">
+<label class="formLabel">Телефон или email</label>
+<input class="formField" id="contact-value" placeholder="+7 ... / name@company.ru">
+<label class="formLabel">Комментарий</label>
+<textarea class="formField" id="contact-comment" rows="4" placeholder="Коротко опишите задачу"></textarea>
+<button class="primary formSubmit" id="contact-submit" type="button">Отправить запрос</button>
+<div id="contact-success" class="formSuccess" style="display:none">Спасибо. В финальном сайте здесь заявка будет передаваться в CRM.</div>
+</div>
+</div></section>
+</main>
+
+<footer class="footer" id="contacts"><div class="wrap foot">
+<div><b>PromSafe</b><br><small>Фирменный логотип и оригинальные фотографии подключаются на следующем этапе.</small></div>
+<div><a class="footerLink" href="tel:+79163466469">+7 (916) 346–64–69</a><br><a class="footerLink" href="tel:+79100001485">+7 (910) 000–14–85</a><br><a class="footerLink" href="mailto:info@promsafe.ru">info@promsafe.ru</a></div>
+<div><small>Visual Prototype V2 · калькулятор встроен в главную страницу.</small></div>
+</div></footer>
+<div class="previewBadge">PromSafe 2.0 · Visual Prototype V2</div>
+<script>
+const pageIds = ["home","service","industry","calculator","article","documents-article","resource","risk-service","contact"];
+
+function showPage(id, updateHash=true){
+  if(!pageIds.includes(id)) id="home";
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.dataset.pageId===id));
+  document.querySelectorAll("[data-page]").forEach(a=>{
+    const isKnowledgeNav = a.dataset.page==="article" && (id==="article" || id==="documents-article");
+    a.classList.toggle("active", a.dataset.page===id || isKnowledgeNav);
+  });
+  if(updateHash && location.hash !== "#"+id) history.pushState(null,"","#"+id);
+  window.scrollTo({top:0,behavior:"instant"});
+  if(id==="calculator") initQuiz();
+  if(id==="home") initHomeQuiz();
+}
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-page]");
+  if(!a) return;
+  e.preventDefault();
+  showPage(a.dataset.page);
+});
+window.addEventListener("hashchange",()=>showPage(location.hash.slice(1)||"home",false));
+
+const qs=[
+ {t:"Чем занимается компания?",o:["Офис / услуги","Торговля","Склад / логистика","Строительство","Производство","Другое"]},
+ {t:"Сколько сотрудников?",o:["До 15","16–50","51–100","101–300","300+"]},
+ {t:"Сколько объектов или площадок?",o:["1","2–3","4+"]},
+ {t:"Как сейчас организована охрана труда?",o:["Нужно сделать всё с нуля","Есть часть документов","Есть действующая система","Не знаю"]},
+ {t:"Что вам требуется?",o:["Создать систему","Постоянное сопровождение","Подготовиться к проверке","Разовая задача","Не уверен"]}
+];
+let step=0,ans=[];
+function initQuiz(){
+  step=0; ans=[];
+  const qb=document.getElementById("quizbox"), r=document.getElementById("result");
+  if(qb) qb.style.display="block";
+  if(r) r.style.display="none";
+  renderQuiz();
+}
+function renderQuiz(){
+  const qnum=document.getElementById("qnum"),qtitle=document.getElementById("qtitle"),prog=document.getElementById("prog"),box=document.getElementById("options"),back=document.getElementById("back");
+  if(!qnum||!qtitle||!prog||!box||!back) return;
+  qnum.textContent=`Вопрос ${step+1} из ${qs.length}`;
+  qtitle.textContent=qs[step].t;
+  prog.style.width=((step+1)/qs.length*100)+"%";
+  box.innerHTML="";
+  qs[step].o.forEach(x=>{
+    const b=document.createElement("button"); b.className="opt"+(ans[step]===x?" active":""); b.textContent=x;
+    b.onclick=()=>{ans[step]=x;if(step<qs.length-1){step++;renderQuiz()}else showResult()};
+    box.appendChild(b);
+  });
+  back.style.visibility=step?"visible":"hidden";
+  back.onclick=()=>{if(step){step--;renderQuiz()}};
+}
+function showResult(){
+  document.getElementById("quizbox").style.display="none";
+  document.getElementById("result").style.display="block";
+  document.getElementById("summary").textContent=`Ваши ответы: ${ans.join(" · ")}.`;
+}
+
+let homeStep=0,homeAns=[];
+function initHomeQuiz(){
+  homeStep=0; homeAns=[];
+  const qb=document.getElementById("homeQuizbox"), r=document.getElementById("homeResult");
+  if(qb) qb.style.display="block";
+  if(r) r.style.display="none";
+  renderHomeQuiz();
+}
+function renderHomeQuiz(){
+  const qnum=document.getElementById("homeQnum"),qtitle=document.getElementById("homeQtitle"),prog=document.getElementById("homeProg"),box=document.getElementById("homeOptions"),back=document.getElementById("homeBack"),pct=document.getElementById("homeProgressText"),stepNo=document.getElementById("homeStepNumber");
+  if(!qnum||!qtitle||!prog||!box||!back) return;
+  const percent=Math.round((homeStep+1)/qs.length*100);
+  qnum.textContent=`Вопрос ${homeStep+1} из ${qs.length}`;
+  qtitle.textContent=qs[homeStep].t;
+  prog.style.width=percent+"%";
+  if(pct) pct.textContent=percent+"%";
+  if(stepNo) stepNo.textContent=String(homeStep+1).padStart(2,"0");
+  box.innerHTML="";
+  qs[homeStep].o.forEach(x=>{
+    const b=document.createElement("button");
+    b.className="opt"+(homeAns[homeStep]===x?" active":"");
+    b.textContent=x;
+    b.onclick=()=>{homeAns[homeStep]=x;if(homeStep<qs.length-1){homeStep++;renderHomeQuiz()}else showHomeResult()};
+    box.appendChild(b);
+  });
+  back.style.visibility=homeStep?"visible":"hidden";
+  back.onclick=()=>{if(homeStep){homeStep--;renderHomeQuiz()}};
+}
+function showHomeResult(){
+  document.getElementById("homeQuizbox").style.display="none";
+  document.getElementById("homeResult").style.display="block";
+  const summary=document.getElementById("homeSummary");
+  if(summary) summary.textContent=`${homeAns[0]} · ${homeAns[1]} · ${homeAns[2]} · ${homeAns[3]} · ${homeAns[4]}`;
+  const fmt=document.getElementById("homeFormat");
+  if(fmt){
+    const need=homeAns[4]||"";
+    fmt.textContent=need==="Постоянное сопровождение"?"Регулярное сопровождение":need==="Разовая задача"?"Разовая работа":need==="Подготовиться к проверке"?"Подготовка к проверке":"Первичная оценка и подбор формата";
+  }
+  const restart=document.getElementById("homeRestart");
+  if(restart) restart.onclick=initHomeQuiz;
+}
+
+document.addEventListener("click",e=>{
+  if(e.target && e.target.id==="contact-submit"){
+    const success=document.getElementById("contact-success");
+    if(success) success.style.display="block";
+  }
+});
+showPage(location.hash.slice(1)||"home",false);
+</script>
+</body></html>
